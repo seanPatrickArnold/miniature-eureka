@@ -22,7 +22,8 @@ app.post('/api/notes', (req, res) => {
     if (!req.body) {
         res.status(400).send('There is no body.');
     } else {
-        db.push({ title: req.body.title, text: req.body.text });
+        db.push({ title: req.body.title, text: req.body.text, id: req.body.id });
+        res.json(db);
         fs.writeFileSync(
             path.join(__dirname, './db/db.json'),
             JSON.stringify(db, null, 2)
@@ -31,12 +32,17 @@ app.post('/api/notes', (req, res) => {
     }
 });
 
-app.delete('/api/notes', (req, res) => {
+app.delete('/api/notes/:id', (req, res) => {
     // if no data in req.body, send 400 error back
-    if (!req.body) {
-        res.status(400).send('There is no body.');
+    if (!req.params.id) {
+        res.status(400).send('Invalid note id.');
     } else {
-        db.push({ title: req.body.title, text: req.body.text });
+        const result = db.filter(note => note.id === req.params.id)[0];
+        db.splice(db.indexOf(result), 1);
+        fs.writeFileSync(
+            path.join(__dirname, './db/db.json'),
+            JSON.stringify(db, null, 2)
+        );
         res.json(db);
     }
 });

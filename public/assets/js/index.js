@@ -4,20 +4,14 @@ let saveNoteBtn;
 let newNoteBtn;
 let noteList;
 
-
-
-console.log(window.location.pathname);
-console.log('./notes.html');
-console.log(window.location);
-
-// if (window.location.pathname === '/notes') {
-console.log('hello');
-noteTitle = document.querySelector('.note-title');
-noteText = document.querySelector('.note-textarea');
-saveNoteBtn = document.querySelector('.save-note');
-newNoteBtn = document.querySelector('.new-note');
-noteList = document.querySelectorAll('.list-container .list-group');
-// }
+if (window.location.pathname === '/notes') {
+  console.log('notes');
+  noteTitle = document.querySelector('.note-title');
+  noteText = document.querySelector('.note-textarea');
+  saveNoteBtn = document.querySelector('.save-note');
+  newNoteBtn = document.querySelector('.new-note');
+  noteList = document.querySelectorAll('.list-container .list-group');
+}
 
 // Show an element
 const show = (elem) => {
@@ -57,7 +51,8 @@ const deleteNote = (id) =>
     headers: {
       'Content-Type': 'application/json',
     },
-  });
+  })
+    .then();
 
 const renderActiveNote = () => {
   hide(saveNoteBtn);
@@ -81,7 +76,6 @@ const handleNoteSave = () => {
     text: noteText.value,
     id: (Math.floor(Math.random() * 1000).toString())
   };
-  console.log(newNote);
   saveNote(newNote).then(() => {
     getAndRenderNotes();
     renderActiveNote();
@@ -94,10 +88,7 @@ const handleNoteDelete = (e) => {
   e.stopPropagation();
 
   const note = e.target;
-  const noteId = JSON.parse(note.parentElement.getAttribute('data-note')).title;
-
-  console.log(note.parentElement.data);
-  console.log(noteId);
+  const noteId = JSON.parse(note.parentElement.getAttribute('data-note')).id;
 
   if (activeNote.id === noteId) {
     activeNote = {};
@@ -113,7 +104,6 @@ const handleNoteDelete = (e) => {
 const handleNoteView = (e) => {
   e.preventDefault();
   activeNote = JSON.parse(e.target.parentElement.getAttribute('data-note'));
-  console.log(activeNote);
   renderActiveNote();
 };
 
@@ -121,7 +111,6 @@ const handleNoteView = (e) => {
 const handleNewNoteView = (e) => {
   activeNote = {};
   renderActiveNote();
-  console.log(activeNote);
 };
 
 const handleRenderSaveBtn = () => {
@@ -143,8 +132,6 @@ const renderNoteList = async (notes) => {
       return jsonNotes
     })
     .then(jsonNotes => {
-      // let jsonNotes = await getNotes();
-      console.log(jsonNotes);
       // if (window.location.pathname === '/notes') {
       noteList.forEach((el) => (el.innerHTML = ''));
       // }
@@ -183,9 +170,6 @@ const renderNoteList = async (notes) => {
       if (jsonNotes.length === 0) {
         noteListItems.push(createLi('No saved Notes', false));
       }
-
-      // let tempJsonNotes = getNotes();
-      // console.log(tempJsonNotes);
 
       jsonNotes.forEach((note) => {
         const li = createLi(note.title);

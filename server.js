@@ -4,8 +4,6 @@ const path = require('path');
 const db = require('./db/db');
 const fs = require('fs');
 
-console.log(db);
-
 const PORT = process.env.PORT || 3001;
 const app = express();
 
@@ -23,7 +21,6 @@ app.post('/api/notes', (req, res) => {
         res.status(400).send('There is no body.');
     } else {
         db.push({ title: req.body.title, text: req.body.text, id: req.body.id });
-        res.json(db);
         fs.writeFileSync(
             path.join(__dirname, './db/db.json'),
             JSON.stringify(db, null, 2)

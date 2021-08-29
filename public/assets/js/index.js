@@ -1,10 +1,11 @@
+// Declare variables for page elements
 let noteTitle;
 let noteText;
 let saveNoteBtn;
 let newNoteBtn;
 let noteList;
 
-
+// Establish values for page elmeent variables if on the notes page
 if (window.location.pathname === '/notes.html') {
   noteTitle = document.querySelector('.note-title');
   noteText = document.querySelector('.note-textarea');
@@ -26,6 +27,7 @@ const hide = (elem) => {
 // activeNote is used to keep track of the note in the textarea
 let activeNote = {};
 
+// Function to fetch route to get notes from db.json
 const getNotes = () =>
   fetch('/api/notes', {
     method: 'GET',
@@ -36,6 +38,7 @@ const getNotes = () =>
     return data
   });
 
+// Function to save a note using fetch to connect to express api endpoints
 const saveNote = (note) =>
   fetch('/api/notes', {
     method: 'POST',
@@ -45,6 +48,7 @@ const saveNote = (note) =>
     body: JSON.stringify(note),
   });
 
+// Function to delete a note from db.json using express.js route from server.js
 const deleteNote = (id) =>
   fetch(`/api/notes/${id}`, {
     method: 'DELETE',
@@ -54,6 +58,7 @@ const deleteNote = (id) =>
   })
     .then();
 
+// Set text of note taking area and inputs based on activeNote
 const renderActiveNote = () => {
   hide(saveNoteBtn);
 
@@ -70,6 +75,7 @@ const renderActiveNote = () => {
   }
 };
 
+// Call function to fetch express note saving route and adjust UI accordingly
 const handleNoteSave = () => {
   const newNote = {
     title: noteTitle.value,
@@ -113,6 +119,7 @@ const handleNewNoteView = (e) => {
   renderActiveNote();
 };
 
+// Display a save icon in nav bar only if a title and text have been provided
 const handleRenderSaveBtn = () => {
   if (!noteTitle.value.trim() || !noteText.value.trim()) {
     hide(saveNoteBtn);
@@ -195,6 +202,5 @@ if (window.location.pathname === '/notes.html') {
   noteText.addEventListener('keyup', handleRenderSaveBtn);
 }
 
-
-
+// Render initial notes
 getAndRenderNotes();
